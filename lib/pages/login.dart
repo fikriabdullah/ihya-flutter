@@ -21,6 +21,7 @@ class _loginState extends State<login> {
     return Form(
       key: _formKey,
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.blue,
         body: SafeArea(
           child: Container(
@@ -47,12 +48,19 @@ class _loginState extends State<login> {
                   SizedBox(
                     width:350,
                     child: TextFormField(
+                      validator: (value) {
+                        if(value == null || value.isEmpty){
+                          return 'Please Enter Your Email';
+                        }
+                        return null;
+                      },
+                      textInputAction: TextInputAction.next,
                         autofocus: true,
                         decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20)
                         ),
-                        labelText: 'Enter Your Username'
+                        labelText: 'Enter Your Email'
                       ),
                     ),
                   ),
@@ -62,6 +70,13 @@ class _loginState extends State<login> {
                   SizedBox(
                     width:350,
                     child: TextFormField(
+                      validator: (value) {
+                        if(value == null || value.isEmpty){
+                          return 'Please Enter Your Password';
+                        }
+                        return null;
+                      },
+                      textInputAction: TextInputAction.done,
                       obscureText: true,
                       decoration: InputDecoration(
                           border: OutlineInputBorder(
@@ -93,7 +108,10 @@ class _loginState extends State<login> {
                   SizedBox(height: 20,),
                   ElevatedButton(
                       onPressed: (){
-                        Navigator.pushReplacementNamed(context, '/dashboardMurid');
+                        if(_formKey.currentState!.validate()){
+                          Navigator.pushReplacementNamed(context, '/dashboardMurid');
+                          print("redirecting to dashboardMurid");
+                        }
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -103,7 +121,15 @@ class _loginState extends State<login> {
                             fontSize: 20,
                           ),
                         ),
-                      ))
+                      )),
+                  Row(
+                    children: [
+                      Text("Not Have Account Yet? "),
+                      TextButton(onPressed: (){
+                        Navigator.pushReplacementNamed(context, '/register');
+                      }, child: Text("Click Here"))
+                    ],
+                  )
                 ],
               ),
             )
