@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>975899183950-755beekhkcp1j2bn63nhr69jflt8oaeh.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.975899183950-755beekhkcp1j2bn63nhr69jflt8oaeh</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBgYDxW4u-W-0_421Ulj7EY9874SbG4IsU</string>
+	<key>GCM_SENDER_ID</key>
+	<string>975899183950</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.ihyaFlutterNew</string>
+	<key>PROJECT_ID</key>
+	<string>flutter-ihya</string>
+	<key>STORAGE_BUCKET</key>
+	<string>flutter-ihya.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:975899183950:ios:fc71a6141123e8d2a5ac1f</string>
+</dict>
+</plist>

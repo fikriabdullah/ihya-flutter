@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:ihya_flutter_new/widgets.dart';
+import 'package:ihya_flutter_new/services/auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+List<String> userMenu = <String>['Pilih Role', 'Guru', 'Murid'];
 
 class register extends StatelessWidget {
   const register({Key? key}) : super(key: key);
@@ -23,8 +25,19 @@ class registerForm extends StatefulWidget {
   State<registerForm> createState() => _registerFormState();
 }
 
-class _registerFormState extends State<registerForm> {
+
+class _registerFormState extends State<registerForm>{
+
   final formKey = GlobalKey<FormState>();
+  final authService auth = authService();
+  static const snackBar = SnackBar(content: Text("User Not Created"));
+
+  String dropDownValue = userMenu.first;
+  String userName = "";
+  String password = "";
+  String email = "";
+  String phoneNumber = "";
+  String role = "";
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +73,11 @@ class _registerFormState extends State<registerForm> {
                     }
                     return null;
                   },
+                  onChanged: (value){
+                    setState(() {
+                      email = value;
+                    });
+                  },
                   autofocus: true,
                   textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
@@ -74,6 +92,11 @@ class _registerFormState extends State<registerForm> {
               SizedBox(
                 width: 350,
                 child: TextFormField(
+                  onChanged: (value) {
+                    setState(() {
+                      userName = value;
+                    });
+                  },
                   validator: (value) {
                     if(value == null || value.isEmpty){
                       return 'Please Enter Your Username';
@@ -93,6 +116,11 @@ class _registerFormState extends State<registerForm> {
               SizedBox(
                 width: 350,
                 child: TextFormField(
+                  onChanged: (value){
+                    setState(() {
+                      password = value;
+                    });
+                  },
                   validator: (value) {
                     if(value == null || value.isEmpty){
                       return 'Please Enter Your Password';
@@ -113,12 +141,12 @@ class _registerFormState extends State<registerForm> {
               SizedBox(
                 width: 350,
                 child: TextFormField(
-                  validator: (value) {
-                    if(value == null || value.isEmpty){
-                      return 'Please Enter Your Phone Number';
-                    }
-                    return null;
+                  onChanged: (value){
+                    setState(() {
+                      phoneNumber = value;
+                    });
                   },
+                  validator: (value) => value == null || value.isEmpty ? 'Please Provide Your Phone Number' : null,
                   textInputAction: TextInputAction.done,
                   decoration: InputDecoration(
                       labelText: "Enter Your Phone Number",
@@ -131,14 +159,43 @@ class _registerFormState extends State<registerForm> {
               SizedBox(height: 20,),
               SizedBox(
                 width: 350,
-                child: DropDownRegister(),
+                child: DropdownButtonFormField(
+                    validator: (value){
+                      if(value == 'Pilih Role'){
+                        return 'Please Pick a Role';
+                      }
+                      return null;
+                    },
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20)
+                        )
+                    ),
+                    items: userMenu.map<DropdownMenuItem<String>>((String value){
+                      return DropdownMenuItem<String>(
+                        child: Text(value),
+                        value: value,
+                      );
+                    }).toList(),
+                    value: dropDownValue,
+                    onChanged: (String? value){
+                      setState(() {
+                        dropDownValue = value!;
+                      });
+                    }
+                )
               ),
               SizedBox(height: 50,),
           ElevatedButton(
-              onPressed: (){
+              onPressed: ()async{
                 if(formKey.currentState!.validate()){
-                  Navigator.pushReplacementNamed(context, '/dashboardMurid');
-                  print("redirecting to dashboard Murid");
+                  dynamic result = await auth.createUserWithEmailPassword(email, password);
+                  if(result != null){
+                    Navigator.pushReplacementNamed(context, '/dashboardMurid');
+                    print("redirecting to dashboard Murid");
+                  }else{
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  }
                 }
               },
               child: Padding(

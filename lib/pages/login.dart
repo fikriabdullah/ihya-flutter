@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:ihya_flutter_new/services/auth.dart';
 
 class login extends StatefulWidget {
   @override
@@ -15,6 +16,12 @@ class login extends StatefulWidget {
 class _loginState extends State<login> {
   final _formKey = GlobalKey<FormState>();
   bool sharedPref = true;
+  String _email = "";
+  String _password ="";
+
+  static const snackBar = SnackBar(content: Text("User Not Available"));
+
+  authService auth = authService();
 
   @override
   Widget build(BuildContext context) {
@@ -48,14 +55,13 @@ class _loginState extends State<login> {
                   SizedBox(
                     width:350,
                     child: TextFormField(
-                      validator: (value) {
-                        if(value == null || value.isEmpty){
-                          return 'Please Enter Your Email';
-                        }
-                        return null;
+                      validator: (value) => value == null || value.isEmpty ? 'Please Provide Your Username' : null,
+                      onChanged: (String value){
+                        setState(() {
+                          _email = value;
+                        });
                       },
                       textInputAction: TextInputAction.next,
-                        autofocus: true,
                         decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20)
@@ -70,11 +76,11 @@ class _loginState extends State<login> {
                   SizedBox(
                     width:350,
                     child: TextFormField(
-                      validator: (value) {
-                        if(value == null || value.isEmpty){
-                          return 'Please Enter Your Password';
-                        }
-                        return null;
+                      validator: (value) => value == null || value.isEmpty ? 'Please Fill Your Password' : null,
+                      onChanged: (String value){
+                        setState(() {
+                          _password = value;
+                        });
                       },
                       textInputAction: TextInputAction.done,
                       obscureText: true,
@@ -107,10 +113,15 @@ class _loginState extends State<login> {
                   ),
                   SizedBox(height: 20,),
                   ElevatedButton(
-                      onPressed: (){
+                      onPressed: ()async{
                         if(_formKey.currentState!.validate()){
-                          Navigator.pushReplacementNamed(context, '/dashboardMurid');
-                          print("redirecting to dashboardMurid");
+                          dynamic result = await auth.signInWithEmailPassword(_email, _password);
+                          if(result != null){
+                            print("redirecting to dashboardMurid");
+                            Navigator.pushReplacementNamed(context, '/dashboardMurid');
+                          }else{
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          }
                         }
                       },
                       child: Padding(

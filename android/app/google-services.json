@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "975899183950",
+    "project_id": "flutter-ihya",
+    "storage_bucket": "flutter-ihya.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:975899183950:android:bde71fc2f227e8f6a5ac1f",
+        "android_client_info": {
+          "package_name": "com.example.ihya_flutter_new"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "975899183950-glaihsloik4lbljsp26m420lmaej8krd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLDSLPJWH1IEedKBjcOsZrdGb7BZnAXpI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "975899183950-glaihsloik4lbljsp26m420lmaej8krd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "975899183950-755beekhkcp1j2bn63nhr69jflt8oaeh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ihyaFlutterNew"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
