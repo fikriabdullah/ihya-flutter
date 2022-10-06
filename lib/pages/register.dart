@@ -181,6 +181,7 @@ class _registerFormState extends State<registerForm>{
                     onChanged: (String? value){
                       setState(() {
                         dropDownValue = value!;
+                        role = value;
                       });
                     }
                 )
@@ -189,11 +190,13 @@ class _registerFormState extends State<registerForm>{
           ElevatedButton(
               onPressed: ()async{
                 if(formKey.currentState!.validate()){
-                  dynamic result = await auth.createUserWithEmailPassword(email, password);
+                  dynamic result = await auth.createUserWithEmailPassword(phoneNumber, userName, email, role, password);
                   if(result != null){
+                    print(result);
                     Navigator.pushReplacementNamed(context, '/dashboardMurid');
                     print("redirecting to dashboard Murid");
                   }else{
+                    print(result);
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   }
                 }

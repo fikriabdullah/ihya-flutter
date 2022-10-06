@@ -1,16 +1,20 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
-import 'package:ihya_flutter_new/pages/login.dart';
+import 'package:ihya_flutter_new/services/firestore.dart';
 
 class authService {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  late final UserCredential credential;
 
-  Future createUserWithEmailPassword(String email, String password) async{
+  Future createUserWithEmailPassword(String phoneNumber, String userName, String email, String role, String password) async{
     try{
-      final credential = await firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+      credential = await firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
       if(credential.user != null){
-        return credential.user?.uid;
+        dynamic saveRecord = await firestoreService(uid: credential.user!.uid).saveUserDataToRTDB(phoneNumber, userName, email, role);
+        if(saveRecord == null){
+          return credential.user?.uid;
+        }else{
+          return saveRecord;
+        }
       }else{
         return null;
       }
@@ -28,7 +32,7 @@ class authService {
 
   Future signInWithEmailPassword(String email, String password)async{
     try{
-      final credential = await firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+      credential = await firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
       if(credential != null){
         return credential.user?.uid;
       }else{
@@ -43,24 +47,6 @@ class authService {
   }
 
   Future signOut()async{
-
-  }
-
-  Future saveUserDataToRTDB(String email, String password, String phoneNumber)async{
-    try{
-      final credential = await firebaseAuth.currentUser?.uid;
-      if(credential != null){
-        print(credential);
-        //save user data to rtdb
-      }else{
-        print(credential);
-        print("user not available");
-      }
-    }on FirebaseAuthException catch(e){
-      return e;
-    }catch (e){
-      return e;
-    }
 
   }
 }
