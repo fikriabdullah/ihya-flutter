@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ihya_flutter_new/firebase_options.dart';
-import 'package:firebase_core/firebase_core.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 
 class splashScreen extends StatefulWidget {
 
@@ -21,8 +19,6 @@ class _splashScreenState extends State<splashScreen> {
       Navigator.pushReplacementNamed(context, '/login');
     });
   }
-
-
 
   @override
   Widget build(BuildContext context) {

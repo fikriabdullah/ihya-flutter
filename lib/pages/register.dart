@@ -191,13 +191,14 @@ class _registerFormState extends State<registerForm>{
               onPressed: ()async{
                 if(formKey.currentState!.validate()){
                   dynamic result = await auth.createUserWithEmailPassword(phoneNumber, userName, email, role, password);
-                  if(result != null){
-                    print(result);
+                  if(result == 'weak-password'){
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please Strengthten Your Password With Combination of Special Character and Numerical')));
+                  }else if(result == 'email-already-in-use'){
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Email is Already in Use')));
+                  }else if(result == 'userCreatedSaved'){
                     Navigator.pushReplacementNamed(context, '/dashboardMurid');
-                    print("redirecting to dashboard Murid");
                   }else{
-                    print(result);
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result)));
                   }
                 }
               },

@@ -116,11 +116,14 @@ class _loginState extends State<login> {
                       onPressed: ()async{
                         if(_formKey.currentState!.validate()){
                           dynamic result = await auth.signInWithEmailPassword(_email, _password);
-                          if(result != null){
-                            print("redirecting to dashboardMurid");
+                          if(result == 'user-not-found'){
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('User Not Found, Please Make an Account By Click Button Above')));
+                          }else if (result == 'wrong-password'){
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Wrong Password')));
+                          }else if(result == 'userLoggedIn'){
                             Navigator.pushReplacementNamed(context, '/dashboardMurid');
                           }else{
-                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result)));
                           }
                         }
                       },

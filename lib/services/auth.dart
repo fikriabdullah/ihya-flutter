@@ -11,7 +11,7 @@ class authService {
       if(credential.user != null){
         dynamic saveRecord = await firestoreService().saveUserDataToRTDB(phoneNumber, userName, email, role, credential.user!.uid);
         if(saveRecord == null){
-          return credential.user?.uid;
+          return 'userCreatedSaved';
         }else{
           return saveRecord;
         }
@@ -25,7 +25,7 @@ class authService {
         return e.code;
       }
     }catch (e){
-      print(e);
+      return 'Something Went Wrong ${e}';
     }
 
   }
@@ -34,16 +34,19 @@ class authService {
     try{
       credential = await firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
       if(credential != null){
-        return credential.user?.uid;
+        return 'userLoggedIn';
       }else{
         return null;
       }
     }on FirebaseAuthException catch (e){
-      print(e);
+      if(e.code == 'user-not-found'){
+        return e.code;
+      }else if(e.code == 'wrong-password'){
+        return e.code;
+      }
     }catch (e){
-      print(e);
+      return 'Something Went Wrong :  ${e}';
     }
-
   }
 
   Future signOut()async{
