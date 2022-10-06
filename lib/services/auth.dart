@@ -9,7 +9,7 @@ class authService {
     try{
       credential = await firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
       if(credential.user != null){
-        dynamic saveRecord = await firestoreService(uid: credential.user!.uid).saveUserDataToRTDB(phoneNumber, userName, email, role);
+        dynamic saveRecord = await firestoreService().saveUserDataToRTDB(phoneNumber, userName, email, role, credential.user!.uid);
         if(saveRecord == null){
           return credential.user?.uid;
         }else{

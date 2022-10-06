@@ -3,11 +3,11 @@ import 'package:ihya_flutter_new/models/user.dart';
 
 class firestoreService{
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  final String uid;
+  //final String uid;
 
-  firestoreService ({required this.uid});
+  //firestoreService ({required this.uid});
 
-  Future saveUserDataToRTDB(String email, String userName, String phoneNumber, String role)async{
+  Future saveUserDataToRTDB(String email, String userName, String phoneNumber, String role, String uid)async{
     String dbDoc = "";
 
     if(role == 'Murid'){
