@@ -30,7 +30,6 @@ class _registerFormState extends State<registerForm>{
 
   final formKey = GlobalKey<FormState>();
   final authService auth = authService();
-  static const snackBar = SnackBar(content: Text("User Not Created"));
 
   String dropDownValue = userMenu.first;
   String userName = "";
@@ -196,7 +195,13 @@ class _registerFormState extends State<registerForm>{
                   }else if(result == 'email-already-in-use'){
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Email is Already in Use')));
                   }else if(result == 'userCreatedSaved'){
-                    Navigator.pushReplacementNamed(context, '/dashboardMurid');
+                    if(role == "Murid"){
+                      Navigator.pushReplacementNamed(context, '/dashboardMurid');
+                      print(role);
+                    }else if(role == "Guru") {
+                      Navigator.pushReplacementNamed(context, '/dashboardGuru');
+                      print(role);
+                    }
                   }else{
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result)));
                   }

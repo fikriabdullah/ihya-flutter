@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ihya_flutter_new/pages/bacaAyat.dart';
+import 'package:ihya_flutter_new/pages/baca_quran.dart';
 import 'package:ihya_flutter_new/pages/login.dart';
 import 'package:ihya_flutter_new/pages/splashScreen.dart';
 import 'package:ihya_flutter_new/pages/dashboardGuru.dart';
@@ -19,7 +21,9 @@ void main() async {
       '/login': (context) => login(),
       '/dashboardMurid': (context) => dashboardMurid(),
       '/register' : (context) => register(),
-      '/dashboardGuru': (context) => dashboardGuru()
+      '/dashboardGuru': (context) => dashboardGuru(),
+      '/bacaQuran' : (context) => bacaQuran(),
+      '/bacaAyat' : (context) => bacaAyat()
     },
   ));
 }

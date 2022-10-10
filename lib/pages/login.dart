@@ -118,12 +118,16 @@ class _loginState extends State<login> {
                           dynamic result = await auth.signInWithEmailPassword(_email, _password);
                           if(result == 'user-not-found'){
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('User Not Found, Please Make an Account By Click Button Above')));
+                            print(result);
                           }else if (result == 'wrong-password'){
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Wrong Password')));
+                            print(result);
                           }else if(result == 'userLoggedIn'){
-                            Navigator.pushReplacementNamed(context, '/dashboardMurid');
+                            Navigator.pushReplacementNamed(context, '/dashboardGuru');
+                            print(result);
                           }else{
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result)));
+                            print(result);
                           }
                         }
                       },
