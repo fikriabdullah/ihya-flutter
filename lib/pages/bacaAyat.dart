@@ -7,11 +7,11 @@ class bacaAyat extends StatefulWidget {
 }
 
 class _bacaAyatState extends State<bacaAyat> {
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
   }
 
   @override
@@ -19,7 +19,7 @@ class _bacaAyatState extends State<bacaAyat> {
     List dataAyat = ModalRoute.of(context)!.settings.arguments as List;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Baca Al-Qur'an"),
+        title: Center(child: Text("Baca Al-Qur'an")),
         backgroundColor: Colors.blue,
       ),
       body: ListView.builder(
@@ -31,12 +31,10 @@ class _bacaAyatState extends State<bacaAyat> {
            child: Padding(
              padding: EdgeInsets.all(8.0),
              child: Column(
-               crossAxisAlignment: CrossAxisAlignment.center,
                children: [
                  Row(
-                   mainAxisAlignment: MainAxisAlignment.center,
+                   mainAxisAlignment: MainAxisAlignment.end,
                    children: [
-                     SizedBox(width: 2.0,),
                      Flexible(
                        child: Text(
                            dataAyat[index]['ar']
@@ -45,7 +43,18 @@ class _bacaAyatState extends State<bacaAyat> {
                    ],
                  ),
                  Divider(height: 15, color: Colors.black,),
-                 Text(dataAyat[index]['idn'])
+                 Row(
+                   children: [
+                     Expanded(
+                         flex: 1,
+                         child: Text(dataAyat[index]['nomor'].toString())
+                     ),
+                     Flexible(
+                         flex: 9,
+                         child: Text(dataAyat[index]['idn'])
+                     ),
+                   ],
+                 )
                ],
              ),
            ),

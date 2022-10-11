@@ -52,5 +52,9 @@ class authService {
   Future signOut()async{
 
   }
+
+  Future setUsername()async{
+
+  }
 }
 

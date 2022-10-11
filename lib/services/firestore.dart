@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
+import 'package:ihya_flutter_new/models/forumPost.dart';
 import 'package:ihya_flutter_new/models/user.dart';
 
 class firestoreService{
@@ -21,7 +23,17 @@ class firestoreService{
     }
   }
 
-  Future saveMateriToFirestore()async{
+  Future pushForumtoFSDb(String? photoUri, String uid, String postContent)async{
+    DateTime dateTime = DateTime.now();
+    String now = DateFormat.jm().format(dateTime);
+    print(now);
+    try{
+      forumPostModel forumModel = forumPostModel(dateTime: now, photoUri: null, uid: uid, postContent: postContent);
+      final docRef = firestore.collection('ForumDiskusi').doc(uid).collection(uid).doc(uid);
+      await docRef.set(forumModel.toFirestore()).whenComplete(() => null).onError((error, stackTrace) => error);
+    }catch(e){
+      return e;
+    }
 
   }
 }

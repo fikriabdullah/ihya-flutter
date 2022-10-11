@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ihya_flutter_new/pages/bacaAyat.dart';
 import 'package:ihya_flutter_new/pages/baca_quran.dart';
+import 'package:ihya_flutter_new/pages/forumComment.dart';
+import 'package:ihya_flutter_new/pages/forumPost.dart';
 import 'package:ihya_flutter_new/pages/login.dart';
 import 'package:ihya_flutter_new/pages/splashScreen.dart';
 import 'package:ihya_flutter_new/pages/dashboardGuru.dart';
@@ -23,7 +25,9 @@ void main() async {
       '/register' : (context) => register(),
       '/dashboardGuru': (context) => dashboardGuru(),
       '/bacaQuran' : (context) => bacaQuran(),
-      '/bacaAyat' : (context) => bacaAyat()
+      '/bacaAyat' : (context) => bacaAyat(),
+      '/forumDiskusi': (context) => forumPost(),
+      '/forumComment' : (context) => forumComent()
     },
   ));
 }

@@ -18,9 +18,6 @@ class _loginState extends State<login> {
   bool sharedPref = true;
   String _email = "";
   String _password ="";
-
-  static const snackBar = SnackBar(content: Text("User Not Available"));
-
   authService auth = authService();
 
   @override
@@ -40,7 +37,7 @@ class _loginState extends State<login> {
             ),
             child: Container(
               height: 700,
-              width: 800,
+              width: double.infinity,
               margin: EdgeInsets.only(top: 300.0),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(

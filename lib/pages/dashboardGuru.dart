@@ -42,6 +42,7 @@ class _dashboardGuruState extends State<dashboardGuru> {
                 height: double.infinity,
                 width: double.infinity,
                 child: Wrap(
+
                   children: [
                     GestureDetector(
                       onTap : (){
@@ -52,6 +53,18 @@ class _dashboardGuruState extends State<dashboardGuru> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text("Baca Qur'an"),
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap : (){
+                        Navigator.pushNamed(context, '/forumDiskusi');
+                      },
+                      child: Card(
+                        margin : EdgeInsets.all(20),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text("Forum Diskusi"),
                         ),
                       ),
                     )

@@ -20,7 +20,7 @@ class _bacaQuranState extends State<bacaQuran> {
     List namaSurat = ModalRoute.of(context)!.settings.arguments as List;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Baca Al'quran"),
+        title: Center(child: Text("Baca Al'quran")),
         backgroundColor: Colors.blue,
       ),
       body: ListView.builder(
