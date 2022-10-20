@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ihya_flutter_new/services/firestore.dart';
+import 'package:ihya_flutter_new/fbStreams/forum.dart';
 class forumPost extends StatefulWidget {
   const forumPost({Key? key}) : super(key: key);
 
@@ -8,11 +9,19 @@ class forumPost extends StatefulWidget {
 }
 
 class _forumPostState extends State<forumPost> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print("Init State forum");
+  }
+  @override
   String _postValue = "";
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text("Forum Diskusi"),
       ),
@@ -22,7 +31,7 @@ class _forumPostState extends State<forumPost> {
             height: 200,
             width: double.infinity,
             child: Container(
-              padding: EdgeInsets.all(10),
+              padding: EdgeInsets.all(5),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(20)),
                 color: Colors.grey[200]
@@ -42,34 +51,43 @@ class _forumPostState extends State<forumPost> {
                               _postValue = value;
                             });
                           },
+                          textInputAction: TextInputAction.done,
                           keyboardType: TextInputType.multiline,
-                          maxLines: null,
-                          validator: (value) => value == null || value.length == 0 ? "Please Fill the Form Above Before Pressing 'Send' Button" : null,
+                          maxLines: 5,
+                          validator: (value) => value == null || value.length == 0 ? "Please Fill the Form Above Before Pressing 'Post' Button" : null,
                           decoration: InputDecoration.collapsed(
-                             hintText: "Apa Yang Ingin Anda Diskusikan"
+                             hintText: "Apa Yang Ingin Anda Diskusikan?"
                           ),
                         ),
-                        ElevatedButton.icon(
-                            onPressed: (){},
-                            icon: Icon(Icons.image),
-                            label: Text("Add Image"),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            ElevatedButton.icon(
+                                onPressed: (){},
+                                icon: Icon(Icons.image),
+                                label: Text("Add Image"),
+                            ),
+                            ElevatedButton.icon(
+                                onPressed: ()async{
+                                  if(_formKey.currentState!.validate()){
+                                    dynamic result = await firestoreService().pushForumtoFSDb(null, "username", _postValue);
+                                    print(result);
+                                  }
+                                },//send to firestore forum collection,
+                                icon: Icon(Icons.send),
+                                label: Text("Post"))
+                          ],
                         ),
-                        ElevatedButton.icon(
-                            onPressed: ()async{
-                              if(_formKey.currentState!.validate()){
-                                dynamic result = await firestoreService().pushForumtoFSDb(null, "username", _postValue);
-                                print(result);
-                              }
-                            },//send to firestore forum collection,
-                            icon: Icon(Icons.send),
-                            label: Text("Post"))
                       ],
                     ),
                   )
                 ),
             ),
           ),
-          Text("Listview. builder here")
+          SizedBox(
+            height: 500,
+            child: ForumContent()
+          )
         ],
       ),
     );

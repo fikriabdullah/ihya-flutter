@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ihya_flutter_new/providers/quran.dart';
+import 'package:provider/provider.dart';
 class bacaAyat extends StatefulWidget {
   const bacaAyat({Key? key}) : super(key: key);
 
@@ -16,10 +18,11 @@ class _bacaAyatState extends State<bacaAyat> {
 
   @override
   Widget build(BuildContext context) {
-    List dataAyat = ModalRoute.of(context)!.settings.arguments as List;
+    Map wholeAyat = context.watch<QuranList>().aList;
+    List dataAyat = wholeAyat['ayat'];
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text("Baca Al-Qur'an")),
+        title: Center(child: Text(wholeAyat['nama_latin'])),
         backgroundColor: Colors.blue,
       ),
       body: ListView.builder(

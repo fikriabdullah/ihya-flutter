@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:ihya_flutter_new/pages/bacaAyat.dart';
 import 'package:ihya_flutter_new/models/ayat.dart';
+import 'package:provider/provider.dart';
+import 'package:ihya_flutter_new/providers/quran.dart';
 
 class bacaQuran extends StatefulWidget {
   const bacaQuran({Key? key}) : super(key: key);
@@ -10,17 +11,12 @@ class bacaQuran extends StatefulWidget {
 }
 
 class _bacaQuranState extends State<bacaQuran> {
-  void initAyat(int nomor)async{
-    ayat ayatQuran = ayat();
-    dynamic ayat2 = await ayatQuran.getAyatData(nomor);
-    Navigator.pushNamed(context, '/bacaAyat', arguments: ayat2);
-  }
   @override
   Widget build(BuildContext context) {
-    List namaSurat = ModalRoute.of(context)!.settings.arguments as List;
+    List namaSurat = context.watch<QuranList>().qList;
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text("Baca Al'quran")),
+        title: Center(child: Text("Baca Al'Quran")),
         backgroundColor: Colors.blue,
       ),
       body: ListView.builder(
@@ -28,8 +24,9 @@ class _bacaQuranState extends State<bacaQuran> {
         itemBuilder: (context, index){
           return Card(
             child: ListTile(
-              onTap: (){
-                initAyat(index+1);
+              onTap: ()async{
+                await context.read<QuranList>().getAyatData(index+1);
+                Navigator.pushNamed(context, '/bacaAyat');
               },
               title: Text(namaSurat[index]['nama_latin']),
               leading: Text(namaSurat[index]['nomor'].toString()),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../models/surat.dart';
+import 'package:ihya_flutter_new/providers/quran.dart';
+import 'package:provider/provider.dart';
 
 class dashboardGuru extends StatefulWidget {
   const dashboardGuru({Key? key}) : super(key: key);
@@ -9,12 +10,6 @@ class dashboardGuru extends StatefulWidget {
 }
 
 class _dashboardGuruState extends State<dashboardGuru> {
-  void initSurat()async{
-    surat quran = surat();
-    dynamic namaSurat = await quran.getSuratData();
-
-    Navigator.pushNamed(context, '/bacaQuran', arguments: namaSurat);
-  }
 
   @override
   void initState() {
@@ -45,8 +40,9 @@ class _dashboardGuruState extends State<dashboardGuru> {
 
                   children: [
                     GestureDetector(
-                      onTap : (){
-                        initSurat();
+                      onTap : ()async{
+                        await context.read<QuranList>().getSuratData();
+                        Navigator.pushNamed(context, '/bacaQuran');
                       },
                       child: Card(
                         margin : EdgeInsets.all(20),
@@ -57,7 +53,7 @@ class _dashboardGuruState extends State<dashboardGuru> {
                       ),
                     ),
                     GestureDetector(
-                      onTap : (){
+                      onTap : ()async{
                         Navigator.pushNamed(context, '/forumDiskusi');
                       },
                       child: Card(

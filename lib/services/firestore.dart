@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart';
 import 'package:ihya_flutter_new/models/forumPost.dart';
 import 'package:ihya_flutter_new/models/user.dart';
-
+import 'package:ihya_flutter_new/services/auth.dart';
+import 'dart:math';
 class firestoreService{
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
@@ -24,16 +24,27 @@ class firestoreService{
   }
 
   Future pushForumtoFSDb(String? photoUri, String uid, String postContent)async{
-    DateTime dateTime = DateTime.now();
-    String now = DateFormat.jm().format(dateTime);
+    String postId = getForumPostId();
+    String now = DateTime.now().toString();
+    String uid = await authService().getUid();
+    String username = await authService().getUsername();
     print(now);
     try{
-      forumPostModel forumModel = forumPostModel(dateTime: now, photoUri: null, uid: uid, postContent: postContent);
-      final docRef = firestore.collection('ForumDiskusi').doc(uid).collection(uid).doc(uid);
-      await docRef.set(forumModel.toFirestore()).whenComplete(() => null).onError((error, stackTrace) => error);
+      forumPostModel forumModel = forumPostModel(dateTime: now, photoUri: photoUri, uid: uid, postContent: postContent,
+          location: null, postId: postId, username: username);
+      final docRef = firestore.collection('ForumDiskusi').doc(postId);
+      await docRef.set(forumModel.toFirestore()).whenComplete((){
+        return null;
+      }).onError((error, stackTrace) => error);
     }catch(e){
       return e;
     }
+  }
 
+  String getForumPostId(){
+    const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+    Random _rnd = Random();
+    return String.fromCharCodes(Iterable.generate(
+        10, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
   }
 }

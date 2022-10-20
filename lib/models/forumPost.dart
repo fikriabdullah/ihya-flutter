@@ -4,18 +4,25 @@ class forumPostModel{
   String postContent;
   String? photoUri;
   String dateTime;
+  String postId;
+  String username;
   String uid;
-  //Location location;
+  String? location;
 
-forumPostModel({required this.dateTime, required this.photoUri, required this.uid, required this.postContent});
+forumPostModel({required this.dateTime, required this.photoUri,
+  required this.uid, required this.postContent, required this.location, required this.username, required this.postId});
 
-factory forumPostModel.fromFirestore(DocumentSnapshot<Map<String, dynamic>> snapshot, SnapshotOptions? options){
+factory forumPostModel.fromFirestore(
+    DocumentSnapshot<Map<String, dynamic>> snapshot, SnapshotOptions? options){
   final data = snapshot.data();
   return forumPostModel(
       dateTime: data? ['dateTime'],
       photoUri: data? ['photoUri'],
-      uid: data? ['username'],
-      postContent: data? ['postContent']
+      uid: data? ['userId'],
+      postContent: data? ['postContent'],
+      location: data? ['location'],
+      username: data? ['username'],
+      postId: data? ['postId']
   );
 }
 
@@ -23,8 +30,11 @@ Map<String, dynamic> toFirestore(){
   return{
     'dateTime' : dateTime,
     'photoUri' : photoUri,
-    'userName' : uid,
-    'postContent' : postContent
+    'userId' : uid,
+    'postContent' : postContent,
+    'location' : location,
+    'username' :username,
+    'postId' : postId
   };
 }
 
