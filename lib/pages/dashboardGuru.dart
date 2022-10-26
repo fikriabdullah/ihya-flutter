@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ihya_flutter_new/providers/quran.dart';
-import 'package:provider/provider.dart';
+import 'package:http/http.dart';
+import 'dart:convert';
 
 class dashboardGuru extends StatefulWidget {
   const dashboardGuru({Key? key}) : super(key: key);
@@ -37,12 +38,14 @@ class _dashboardGuruState extends State<dashboardGuru> {
                 height: double.infinity,
                 width: double.infinity,
                 child: Wrap(
-
                   children: [
                     GestureDetector(
                       onTap : ()async{
-                        await context.read<QuranList>().getSuratData();
-                        Navigator.pushNamed(context, '/bacaQuran');
+                        Response response = await get(Uri.parse('https://equran.id/api/surat'));
+                        List suratData = jsonDecode(response.body);
+                        print(suratData[1]['nama_latin']);
+
+                        Navigator.pushNamed(context, '/bacaQuran', arguments: suratData);
                       },
                       child: Card(
                         margin : EdgeInsets.all(20),

@@ -16,12 +16,12 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform
+      options: DefaultFirebaseOptions.currentPlatform
   );
   runApp(
-    MultiProvider(providers: [
-      ChangeNotifierProvider(create: (_)=>QuranList())
-    ], child: MyApp())
+      MultiProvider(providers: [
+        ChangeNotifierProvider(create: (_)=>QuranList())
+      ], child: MyApp())
   );
 }
 
@@ -46,4 +46,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

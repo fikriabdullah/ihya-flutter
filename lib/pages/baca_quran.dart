@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ihya_flutter_new/models/ayat.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:ihya_flutter_new/providers/quran.dart';
 
@@ -13,7 +13,7 @@ class bacaQuran extends StatefulWidget {
 class _bacaQuranState extends State<bacaQuran> {
   @override
   Widget build(BuildContext context) {
-    List namaSurat = context.watch<QuranList>().qList;
+    List namaSurat = ModalRoute.of(context)!.settings.arguments as List;
     return Scaffold(
       appBar: AppBar(
         title: Center(child: Text("Baca Al'Quran")),
