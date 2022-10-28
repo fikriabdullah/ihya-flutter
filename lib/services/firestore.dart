@@ -1,11 +1,17 @@
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:ihya_flutter_new/models/forumPost.dart';
 import 'package:ihya_flutter_new/models/user.dart';
 import 'package:ihya_flutter_new/services/auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'dart:math';
 
 class firestoreService {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final FirebaseStorage storage = FirebaseStorage.instance;
 
   Future saveUserDataToRTDB(String email, String userName, String phoneNumber,
       String role, String uid) async {
@@ -17,59 +23,79 @@ class firestoreService {
       dbDoc = role;
     }
     try {
-      userModel users = userModel(phoneNumber: phoneNumber,
+      userModel users = userModel(
+          phoneNumber: phoneNumber,
           userName: userName,
           email: email,
           role: role);
-      final docRef = firestore.collection('Users').doc(dbDoc)
-          .collection(uid)
-          .doc(uid);
-      await docRef.set(users.toFirestore()).whenComplete(() => null).onError((
-          error, stackTrace) => error);
+      final docRef =
+          firestore.collection('Users').doc(dbDoc).collection(uid).doc(uid);
+      await docRef
+          .set(users.toFirestore())
+          .whenComplete(() => null)
+          .onError((error, stackTrace) => error);
     } catch (e) {
       return e;
     }
   }
 
-  Future pushForumtoFSDb(String? photoUri, String postContent) async {
+  Future<TaskSnapshot> uploadImagetoStorage(File? imageFile){
+    final storageRef = storage.ref();
+    String storageId = getForumPostId();
+    final imageRef = storageRef.child("ForumDiskusi/$storageId/.png}");
+    try{
+      final result = imageRef.putFile(imageFile!).whenComplete(() =>
+          imageRef.getDownloadURL()).onError((error, stackTrace) => Future.error(error!));
+      return result;
+    }on FirebaseException catch (e){
+      print("Failed Push image : $e ${e.stackTrace}");
+      throw Future.error(e);
+    }
+  }
+
+  Future pushForumtoFSDb(String? imageFullpath, String postContent) async {
     String postId = getForumPostId();
     String now = DateTime.now().toString();
     String uid = await authService().getUid();
     String username = await authService().getUsername();
     print(now);
     try {
-      forumPostModel forumModel = forumPostModel(dateTime: now,
-          photoUri: photoUri,
-          uid: uid,
-          postContent: postContent,
-          location: null,
-          postId: postId,
-          username: username);
-      final docRef = firestore.collection('ForumDiskusi').doc(postId);
-      await docRef.set(forumModel.toFirestore()).whenComplete(() {
-        return null;
-      }).onError((error, stackTrace) => error);
+        print("Push Image To Storage : $imageFullpath");
+        forumPostModel forumModel = forumPostModel(
+            dateTime: now,
+            imageDownloadUrl: imageFullpath,
+            uid: uid,
+            postContent: postContent,
+            location: null,
+            postId: postId,
+            username: username);
+        final docRef = firestore.collection('ForumDiskusi').doc(postId);
+        await docRef.set(forumModel.toFirestore()).whenComplete(() {
+          return null;
+        }).onError((error, stackTrace) => error);
     } catch (e) {
       return e;
     }
   }
 
-  Future pushForumCommtFSDB(String? photoUri, String postContent,
-      String mainTopicId) async {
+  Future pushForumCommtFSDB(String postContent, String mainTopicId) async {
     String postId = getForumPostId();
     String now = DateTime.now().toString();
     String uid = await authService().getUid();
     String username = await authService().getUsername();
+    String imageDownloadUrl = "";
     print(now);
     try {
-      forumPostModel forumModel = forumPostModel(dateTime: now,
-          photoUri: photoUri,
+      forumPostModel forumModel = forumPostModel(
+          dateTime: now,
+          imageDownloadUrl: imageDownloadUrl,
           uid: uid,
           postContent: postContent,
           location: null,
           postId: postId,
           username: username);
-      final docRef = firestore.collection('ForumDiskusi')
+      final docRef = firestore
+          .collection('ForumDiskusi')
           .doc(mainTopicId)
           .collection("Comments")
           .doc(postId);
@@ -82,9 +108,11 @@ class firestoreService {
   }
 
   String getForumPostId() {
-    const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+    const _chars =
+        'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
     Random _rnd = Random();
     return String.fromCharCodes(Iterable.generate(
-        10, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+        10, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length)))
+    );
   }
 }

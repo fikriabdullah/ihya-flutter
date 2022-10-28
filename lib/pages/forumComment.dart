@@ -112,7 +112,7 @@ class _forumComentState extends State<forumComent> {
                         if (_keyForm.currentState!.validate()) {
                           dynamic putComntRes = firestoreService()
                               .pushForumCommtFSDB(
-                                  null, commetnContent, mainThread["postId"]);
+                                  commetnContent, mainThread["postId"]);
                           if (putComntRes == null) {
                             print(ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(

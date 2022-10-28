@@ -2,14 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class forumPostModel{
   String postContent;
-  String? photoUri;
+  String? imageDownloadUrl;
   String dateTime;
   String postId;
   String username;
   String uid;
   String? location;
 
-forumPostModel({required this.dateTime, required this.photoUri,
+forumPostModel({required this.dateTime, required this.imageDownloadUrl,
   required this.uid, required this.postContent, required this.location, required this.username, required this.postId});
 
 factory forumPostModel.fromFirestore(
@@ -17,7 +17,7 @@ factory forumPostModel.fromFirestore(
   final data = snapshot.data();
   return forumPostModel(
       dateTime: data? ['dateTime'],
-      photoUri: data? ['photoUri'],
+      imageDownloadUrl: data? ['imageDownloadUrl'],
       uid: data? ['userId'],
       postContent: data? ['postContent'],
       location: data? ['location'],
@@ -29,7 +29,7 @@ factory forumPostModel.fromFirestore(
 Map<String, dynamic> toFirestore(){
   return{
     'dateTime' : dateTime,
-    'photoUri' : photoUri,
+    'imageDownloadUrl' : imageDownloadUrl,
     'userId' : uid,
     'postContent' : postContent,
     'location' : location,

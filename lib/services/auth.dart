@@ -21,7 +21,7 @@ class authService {
           return saveRecord;
         }
       }else{
-        return null;
+        return 'User Not Created';
       }
     }on FirebaseAuthException catch(e){
       if(e.code == 'weak-password'){

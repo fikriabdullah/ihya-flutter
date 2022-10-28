@@ -1,9 +1,8 @@
 import 'dart:io';
-
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:ihya_flutter_new/services/firestore.dart';
 import 'package:ihya_flutter_new/fbStreams/forum.dart';
-import 'package:ihya_flutter_new/services/imagePicker.dart';
 import 'package:image_picker/image_picker.dart';
 
 class forumPost extends StatefulWidget {
@@ -16,17 +15,23 @@ class forumPost extends StatefulWidget {
 class _forumPostState extends State<forumPost> {
   final _formKey = GlobalKey<FormState>();
   String _postValue = "";
-  Future<String?> photoForum = Future.value("");
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    print("Init State no image");
-  }
+  List<XFile>? imagePicked;
 
   @override
   Widget build(BuildContext context) {
+    void setPickedImagetoList(XFile? value) {
+      imagePicked = value == null ? null : <XFile>[value];
+    }
+
+    Widget _previewImage() {
+      if (imagePicked != null) {
+        return Image.file(File(imagePicked![0].path));
+      } else {
+        print("No Image Picked");
+        return Container();
+      }
+    }
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -35,7 +40,7 @@ class _forumPostState extends State<forumPost> {
       body: Column(
         children: [
           Container(
-            height: 200,
+            height: 300,
             width: double.infinity,
             child: Container(
               padding: EdgeInsets.all(5),
@@ -43,7 +48,7 @@ class _forumPostState extends State<forumPost> {
                   borderRadius: BorderRadius.all(Radius.circular(20)),
                   color: Colors.grey[200]),
               margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              height: 200,
+              height: 300,
               width: double.infinity,
               child: Form(
                   key: _formKey,
@@ -67,28 +72,19 @@ class _forumPostState extends State<forumPost> {
                           decoration: InputDecoration.collapsed(
                               hintText: "Apa Yang Ingin Anda Diskusikan?"),
                         ),
-                        FutureBuilder(
-                            future: photoForum,
-                            builder: (context, snap) {
-                              if (snap.data!.isNotEmpty) {
-                                print("photoForum : $snap");
-                                return Container(
-                                  child: Image.file(File(snap.data.toString())),
-                                );
-                              } else {
-                                print("Snap has no data");
-                                return Container();
-                              }
-                            }),
+                        _previewImage(),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             ElevatedButton.icon(
                               onPressed: () async {
-                                dynamic photo = await imagePicker().imagePick();
+                                final XFile? pickedImage = await ImagePicker()
+                                    .pickImage(
+                                        source: ImageSource.gallery,
+                                        maxHeight: 100,
+                                        maxWidth: 500);
                                 setState(() {
-                                  print("photo forum on tap : $photo");
-                                  photo = photoForum;
+                                  setPickedImagetoList(pickedImage);
                                 });
                               },
                               icon: Icon(Icons.image),
@@ -96,10 +92,28 @@ class _forumPostState extends State<forumPost> {
                             ),
                             ElevatedButton.icon(
                                 onPressed: () async {
-                                  if (_formKey.currentState!.validate()) {
-                                    dynamic result = await firestoreService()
-                                        .pushForumtoFSDb(null, _postValue);
-                                    print(result);
+                                  if(imagePicked!.isNotEmpty && _formKey.currentState!.validate()){
+                                    print("Push With Image");
+                                    final FirebaseStorage storage = FirebaseStorage.instance;
+                                    final storageRef = storage.ref();
+                                    String storageId = firestoreService().getForumPostId();
+                                    final imageRef = storageRef.child("ForumDiskusi/$storageId.png");
+                                    imageRef.putFile(File(imagePicked![0].path)).then((p0) {
+                                      if(p0.state == TaskState.success){
+                                        print("State : ${p0.state}");
+                                        print("image storage fullpath : ${imageRef.fullPath}");
+                                        firestoreService().pushForumtoFSDb(imageRef.fullPath, _postValue);
+                                      }else{
+                                        print("Push Image Failed ${p0.state}");
+                                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Upload Image Failed")));
+                                      }
+                                    });
+                                  }else if(imagePicked!.isEmpty && _formKey.currentState!.validate()){
+                                    dynamic result = firestoreService().pushForumtoFSDb(null, _postValue);
+                                    print("push result : $result");
+                                  }else{
+                                    print("Form Content is empty or something wrong with image");
+                                    print("Image Picked List : ${imagePicked!.length}");
                                   }
                                 }, //send to firestore forum collection,
                                 icon: Icon(Icons.send),
@@ -111,7 +125,7 @@ class _forumPostState extends State<forumPost> {
                   )),
             ),
           ),
-          SizedBox(height: 500, child: ForumContent())
+          SizedBox(height: 470, child: ForumContent())
         ],
       ),
     );

@@ -30,24 +30,24 @@ class _ForumContentState extends State<ForumContent> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Text(snapshot.data?.docs[index].get('postContent')),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Text(snapshot.data?.docs[index].get('postContent')),
+                        TextButton.icon(
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/forumComment',
+                                  arguments: {
+                                    "MainThread": snapshot.data?.docs[index]
+                                        .get("postContent"),
+                                    "postId":
+                                        snapshot.data?.docs[index].get("postId")
+                                  });
+                            },
+                            icon: Icon(Icons.reply),
+                            label: Text("Comment")),
                       ],
-                    ),
-                    TextButton.icon(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/forumComment',
-                              arguments: {
-                                "MainThread": snapshot.data?.docs[index]
-                                    .get("postContent"),
-                                "postId":
-                                    snapshot.data?.docs[index].get("postId")
-                              });
-                        },
-                        icon: Icon(Icons.reply),
-                        label: Text("Reply"))
+                    )
                   ],
                 ),
               );
