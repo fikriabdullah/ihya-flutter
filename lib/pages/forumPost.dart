@@ -69,7 +69,7 @@ class _forumPostState extends State<forumPost> {
                                   value.length == 0
                               ? "Please Fill the Form Above Before Pressing 'Post' Button"
                               : null,
-                          decoration: InputDecoration.collapsed(
+                          decoration: const InputDecoration.collapsed(
                               hintText: "Apa Yang Ingin Anda Diskusikan?"),
                         ),
                         _previewImage(),
@@ -105,7 +105,7 @@ class _forumPostState extends State<forumPost> {
                                         firestoreService().pushForumtoFSDb(imageRef.fullPath, _postValue);
                                       }else{
                                         print("Push Image Failed ${p0.state}");
-                                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Upload Image Failed")));
+                                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Upload Image Failed")));
                                       }
                                     });
                                   }else if(imagePicked!.isEmpty && _formKey.currentState!.validate()){

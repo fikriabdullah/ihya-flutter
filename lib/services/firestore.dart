@@ -1,12 +1,8 @@
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:ihya_flutter_new/models/forumPost.dart';
 import 'package:ihya_flutter_new/models/user.dart';
 import 'package:ihya_flutter_new/services/auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'dart:math';
 
 class firestoreService {
@@ -36,20 +32,6 @@ class firestoreService {
           .onError((error, stackTrace) => error);
     } catch (e) {
       return e;
-    }
-  }
-
-  Future<TaskSnapshot> uploadImagetoStorage(File? imageFile){
-    final storageRef = storage.ref();
-    String storageId = getForumPostId();
-    final imageRef = storageRef.child("ForumDiskusi/$storageId/.png}");
-    try{
-      final result = imageRef.putFile(imageFile!).whenComplete(() =>
-          imageRef.getDownloadURL()).onError((error, stackTrace) => Future.error(error!));
-      return result;
-    }on FirebaseException catch (e){
-      print("Failed Push image : $e ${e.stackTrace}");
-      throw Future.error(e);
     }
   }
 

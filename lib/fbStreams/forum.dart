@@ -1,3 +1,4 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -26,10 +27,41 @@ class _ForumContentState extends State<ForumContent> {
           return ListView.builder(
             itemCount: snapshot.data?.docs.length,
             itemBuilder: (context, index) {
+              Widget _imageView(){
+                String? imagePath = snapshot.data?.docs[index].get('imageDownloadUrl');
+                print("Image path : $imagePath");
+                if(imagePath != null){
+                  print("With Image");
+                  final FirebaseStorage storage = FirebaseStorage.instance;
+                  final storageRef = storage.ref();
+                  final downloadUrl = storageRef.child(imagePath).getDownloadURL();
+                  return FutureBuilder<String>(
+                  future: downloadUrl,
+                  builder: (BuildContext context, AsyncSnapshot<String> snapshot){
+                    print("Image Download URL : ${snapshot.data}");
+                    if(snapshot.hasData && (snapshot.data != null)){
+                      print("Snapshot : ${snapshot.data}");
+                      return Image.network(snapshot.data!);
+                    }else if(snapshot.hasData && (snapshot.data == null)){
+                      print("Snapshot is Null : ${snapshot.data}");
+                    }else if(snapshot.hasError) {
+                      print("Snapshot has Error : ${snapshot.error}");
+                    }
+                    print("Image OB");
+                    return Container();
+                  }
+                );
+              }
+                return Container();
+              }
               return Card(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Text(snapshot.data?.docs[index].get('username')),
+                    const SizedBox(height: 20,),
+                    Text(snapshot.data?.docs[index].get('dateTime')),
+                    _imageView(),
                     Text(snapshot.data?.docs[index].get('postContent')),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
