@@ -92,32 +92,36 @@ class _forumPostState extends State<forumPost> {
                             ),
                             ElevatedButton.icon(
                                 onPressed: () async {
-                                  if(imagePicked!.isNotEmpty && _formKey.currentState!.validate()){
-                                    print("Push With Image");
-                                    final FirebaseStorage storage = FirebaseStorage.instance;
-                                    final storageRef = storage.ref();
-                                    String storageId = firestoreService().getForumPostId();
-                                    final imageRef = storageRef.child("ForumDiskusi/$storageId.png");
-                                    imageRef.putFile(File(imagePicked![0].path)).then((p0) {
-                                      if(p0.state == TaskState.success){
-                                        print("State : ${p0.state}");
-                                        print("image storage fullpath : ${imageRef.fullPath}");
-                                        firestoreService().pushForumtoFSDb(imageRef.fullPath, _postValue);
-                                      }else{
-                                        print("Push Image Failed ${p0.state}");
-                                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Upload Image Failed")));
-                                      }
-                                    });
-                                  }else if(imagePicked!.isEmpty && _formKey.currentState!.validate()){
-                                    dynamic result = firestoreService().pushForumtoFSDb(null, _postValue);
-                                    print("push result : $result");
-                                  }else{
-                                    print("Form Content is empty or something wrong with image");
-                                    print("Image Picked List : ${imagePicked!.length}");
+                                  if(imagePicked != null){
+                                    if(_formKey.currentState!.validate()){
+                                      print("Push With Image");
+                                      final FirebaseStorage storage = FirebaseStorage.instance;
+                                      final storageRef = storage.ref();
+                                      String storageId = firestoreService().getForumPostId();
+                                      final imageRef = storageRef.child("ForumDiskusi/$storageId.png");
+                                      imageRef.putFile(File(imagePicked![0].path)).then((p0) {
+                                        if(p0.state == TaskState.success){
+                                          print("State : ${p0.state}");
+                                          //print("image storage fullpath : ${imageRef.fullPath}");
+                                          firestoreService().pushForumtoFSDb(imageRef.fullPath, _postValue);
+                                        }else{
+                                          print("Push Image Failed ${p0.state}");
+                                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Upload Image Failed")));
+                                        }
+                                      });
+                                    }
+                                  }else if(imagePicked == null){
+                                    if(_formKey.currentState!.validate()){
+                                      dynamic result = firestoreService().pushForumtoFSDb(null, _postValue);
+                                      print("push result : $result");
+                                    }else{
+                                      print("Form Content is empty or something wrong with image");
+                                      print("Image Picked List : ${imagePicked!.length}");
+                                    }
                                   }
                                 }, //send to firestore forum collection,
-                                icon: Icon(Icons.send),
-                                label: Text("Post"))
+                                icon: const Icon(Icons.send),
+                                label: const Text("Post"))
                           ],
                         ),
                       ],
@@ -125,7 +129,10 @@ class _forumPostState extends State<forumPost> {
                   )),
             ),
           ),
-          SizedBox(height: 470, child: ForumContent())
+          const SizedBox(
+              height: 470,
+              child: ForumContent()
+          )
         ],
       ),
     );

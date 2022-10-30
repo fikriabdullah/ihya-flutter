@@ -1,6 +1,8 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ihya_flutter_new/services/fbStorage.dart';
+import 'package:intl/intl.dart';
 
 class ForumContent extends StatefulWidget {
   const ForumContent({Key? key}) : super(key: key);
@@ -27,20 +29,21 @@ class _ForumContentState extends State<ForumContent> {
           return ListView.builder(
             itemCount: snapshot.data?.docs.length,
             itemBuilder: (context, index) {
-              Widget _imageView(){
+              DateTime dateTime = DateTime.parse(snapshot.data?.docs[index].get('dateTime'));
+              String date = DateFormat.yMEd().format(dateTime);
+              String time = DateFormat.Hm().format(dateTime);
+              Widget _imageView(){ //viewImageonForum
                 String? imagePath = snapshot.data?.docs[index].get('imageDownloadUrl');
                 print("Image path : $imagePath");
                 if(imagePath != null){
                   print("With Image");
-                  final FirebaseStorage storage = FirebaseStorage.instance;
-                  final storageRef = storage.ref();
-                  final downloadUrl = storageRef.child(imagePath).getDownloadURL();
+                  final downloadUrl = fbStorage().getImageFromStorage(imagePath);
                   return FutureBuilder<String>(
                   future: downloadUrl,
                   builder: (BuildContext context, AsyncSnapshot<String> snapshot){
-                    print("Image Download URL : ${snapshot.data}");
+                    //print("Image Download URL : ${snapshot.data}");
                     if(snapshot.hasData && (snapshot.data != null)){
-                      print("Snapshot : ${snapshot.data}");
+                      //print("Snapshot : ${snapshot.data}");
                       return Image.network(snapshot.data!);
                     }else if(snapshot.hasData && (snapshot.data == null)){
                       print("Snapshot is Null : ${snapshot.data}");
@@ -55,32 +58,44 @@ class _ForumContentState extends State<ForumContent> {
                 return Container();
               }
               return Card(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(snapshot.data?.docs[index].get('username')),
-                    const SizedBox(height: 20,),
-                    Text(snapshot.data?.docs[index].get('dateTime')),
-                    _imageView(),
-                    Text(snapshot.data?.docs[index].get('postContent')),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        TextButton.icon(
-                            onPressed: () {
-                              Navigator.pushNamed(context, '/forumComment',
-                                  arguments: {
-                                    "MainThread": snapshot.data?.docs[index]
-                                        .get("postContent"),
-                                    "postId":
-                                        snapshot.data?.docs[index].get("postId")
-                                  });
-                            },
-                            icon: Icon(Icons.reply),
-                            label: Text("Comment")),
-                      ],
-                    )
-                  ],
+                margin: const EdgeInsets.all(10),
+                color: Colors.grey[200],
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(snapshot.data?.docs[index].get('username')),
+                      const SizedBox(height: 20,),
+                      Row(
+                        children: [
+                          Text(date),
+                          SizedBox(width: 10,),
+                          Text(time)
+                        ],
+                      ),
+                      _imageView(),
+                      Text(snapshot.data?.docs[index].get('postContent')),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          TextButton.icon(
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/forumComment',
+                                    arguments: {
+                                      "postId": snapshot.data?.docs[index].get("postId"),
+                                      "topic" : snapshot.data?.docs[index].get("postContent"),
+                                      "imageUrl" : snapshot.data?.docs[index].get("imageDownloadUrl"),
+                                      "username" : snapshot.data?.docs[index].get("username"),
+                                      "dateTime" : snapshot.data?.docs[index].get("dateTime")
+                                    });
+                              },
+                              icon: Icon(Icons.reply),
+                              label: Text("Comment")),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               );
             },

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ihya_flutter_new/pages/addMateri.dart';
 import 'package:ihya_flutter_new/pages/bacaAyat.dart';
 import 'package:ihya_flutter_new/pages/baca_quran.dart';
 import 'package:ihya_flutter_new/pages/forumComment.dart';
@@ -41,7 +42,8 @@ class MyApp extends StatelessWidget {
         '/bacaQuran' : (context) => bacaQuran(),
         '/bacaAyat' : (context) => bacaAyat(),
         '/forumDiskusi': (context) => forumPost(),
-        '/forumComment' : (context) => forumComent()
+        '/forumComment' : (context) => forumComent(),
+        '/addMateri' : (context)=> tambahMateri()
       },
     );
   }
