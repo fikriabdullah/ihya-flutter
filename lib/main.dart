@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:ihya_flutter_new/pages/addMateri.dart';
 import 'package:ihya_flutter_new/pages/bacaAyat.dart';
 import 'package:ihya_flutter_new/pages/baca_quran.dart';
@@ -11,19 +12,13 @@ import 'package:ihya_flutter_new/pages/dashboardMurid.dart';
 import 'package:ihya_flutter_new/pages/register.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:ihya_flutter_new/firebase_options.dart';
-import 'package:ihya_flutter_new/providers/quran.dart';
-import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform
   );
-  runApp(
-      MultiProvider(providers: [
-        ChangeNotifierProvider(create: (_)=>QuranList())
-      ], child: MyApp())
-  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

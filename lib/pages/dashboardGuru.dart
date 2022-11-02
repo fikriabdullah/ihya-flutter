@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ihya_flutter_new/providers/quran.dart';
-import 'package:http/http.dart';
-import 'dart:convert';
+import 'package:get/get.dart';
+import 'package:ihya_flutter_new/GetController/quran.dart';
 
 class dashboardGuru extends StatefulWidget {
   const dashboardGuru({Key? key}) : super(key: key);
@@ -17,7 +16,7 @@ class _dashboardGuruState extends State<dashboardGuru> {
     // TODO: implement initState
     super.initState();
   }
-
+  final controller = Get.put(QuranList());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,10 +40,9 @@ class _dashboardGuruState extends State<dashboardGuru> {
                   children: [
                     GestureDetector(
                       onTap : ()async{
-                        Response response = await get(Uri.parse('https://equran.id/api/surat'));
-                        List suratData = jsonDecode(response.body);
+                        await controller.getSuratData();
+                        List suratData = controller.qList;
                         print(suratData[1]['nama_latin']);
-
                         Navigator.pushNamed(context, '/bacaQuran', arguments: suratData);
                       },
                       child: Card(
@@ -64,6 +62,18 @@ class _dashboardGuruState extends State<dashboardGuru> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text("Forum Diskusi"),
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap : ()async{
+                        Navigator.pushNamed(context, '/addMateri');
+                      },
+                      child: Card(
+                        margin : EdgeInsets.all(20),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text("Buat Materi"),
                         ),
                       ),
                     )

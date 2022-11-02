@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ihya_flutter_new/providers/quran.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
+import 'package:ihya_flutter_new/GetController/quran.dart';
 class bacaAyat extends StatefulWidget {
   const bacaAyat({Key? key}) : super(key: key);
 
@@ -15,14 +15,20 @@ class _bacaAyatState extends State<bacaAyat> {
     // TODO: implement initState
     super.initState();
   }
-
+  final controller = Get.find<QuranList>();
   @override
   Widget build(BuildContext context) {
-    Map wholeAyat = context.watch<QuranList>().aList;
+    Map wholeAyat = controller.aList;
     List dataAyat = wholeAyat['ayat'];
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text(wholeAyat['nama_latin'])),
+        title: Center(
+            child: GetBuilder<QuranList>(
+          builder: (_) => Text(
+              "${_.aList['nama_latin']}"
+          ),
+      )
+        ),
         backgroundColor: Colors.blue,
       ),
       body: ListView.builder(

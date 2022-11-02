@@ -19,6 +19,7 @@ class _forumPostState extends State<forumPost> {
 
   @override
   Widget build(BuildContext context) {
+
     void setPickedImagetoList(XFile? value) {
       imagePicked = value == null ? null : <XFile>[value];
     }
@@ -65,10 +66,7 @@ class _forumPostState extends State<forumPost> {
                           textInputAction: TextInputAction.done,
                           keyboardType: TextInputType.multiline,
                           maxLines: 5,
-                          validator: (value) => value == null ||
-                                  value.length == 0
-                              ? "Please Fill the Form Above Before Pressing 'Post' Button"
-                              : null,
+                          validator: (value) => value == null || value.length == 0 ? "Please Fill the Form Above Before Pressing 'Post' Button" : null,
                           decoration: const InputDecoration.collapsed(
                               hintText: "Apa Yang Ingin Anda Diskusikan?"),
                         ),
